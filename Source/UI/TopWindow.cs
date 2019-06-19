@@ -1,17 +1,16 @@
-﻿using System;
-using UnityEngine;
-using KSP.UI.Screens;
+﻿using UnityEngine;
 
 namespace RP0
 {
     public class TopWindow : UIBase
     {
-        // GUI
         static Rect windowPos = new Rect(500, 240, 0, 0);
+
         private MaintenanceGUI maintUI = new MaintenanceGUI();
         private ToolingGUI toolUI = new ToolingGUI();
         private Crew.FSGUI fsUI = new RP0.Crew.FSGUI();
         private AvionicsGUI avUI = new AvionicsGUI();
+        private ContractGUI contractUI = new ContractGUI();
         private CareerLogGUI logUI = new CareerLogGUI();
         private static Tabs currentTab;
 
@@ -24,6 +23,15 @@ namespace RP0
         public void OnGUI()
         {
             windowPos = GUILayout.Window("RP0Top".GetHashCode(), windowPos, DrawWindow, "RP-1", HighLogic.Skin.window);
+        }
+
+        protected override void OnStart()
+        {
+            maintUI.Start();
+            toolUI.Start();
+            fsUI.Start();
+            avUI.Start();
+            contractUI.Start();
         }
 
         public static void SwitchTabTo(Tabs newTab)
@@ -45,6 +53,8 @@ namespace RP0
                     currentTab = Tabs.Courses;
                 if (showTab(Tabs.Avionics) && toggleButton("Avionics", currentTab == Tabs.Avionics))
                     currentTab = Tabs.Avionics;
+                if (showTab(Tabs.Contracts) && toggleButton("Contracts", currentTab == Tabs.Contracts))
+                    currentTab = Tabs.Contracts;
                 if (showTab(Tabs.CareerLog) && toggleButton("Career Log", currentTab == Tabs.CareerLog))
                     currentTab = Tabs.CareerLog;
             } finally {
@@ -96,6 +106,9 @@ namespace RP0
                             break;
                         case Tabs.Avionics:
                             avUI.avionicsTab();
+                            break;
+                        case Tabs.Contracts:
+                            contractUI.ContractTab();
                             break;
                         case Tabs.CareerLog:
                             logUI.RenderTab();
